@@ -1,5 +1,7 @@
 package main
 
+import "C"
+
 import (
 	"flag"
 	"fmt"
@@ -70,4 +72,21 @@ func main() {
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 	<-sigCh
+}
+
+//export tun2socks_start
+func tun2socks_start(device *C.char, proxy *C.char, logLevel *C.char) bool {
+	maxprocs.Set(maxprocs.Logger(func(string, ...any) {}))
+	key.Device = C.GoString(device)
+	key.Proxy = C.GoString(proxy)
+	key.LogLevel = C.GoString(logLevel)
+
+	engine.Insert(key)
+
+	return engine.StartE() == nil
+}
+
+//export tun2socks_stop
+func tun2socks_stop() bool {
+	return engine.StartE() == nil
 }

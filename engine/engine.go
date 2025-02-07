@@ -46,11 +46,19 @@ func Start() {
 	}
 }
 
+func StartE() error {
+	return start()
+}
+
 // Stop shuts the default engine down.
 func Stop() {
 	if err := stop(); err != nil {
 		log.Fatalf("[ENGINE] failed to stop: %v", err)
 	}
+}
+
+func StopE() error {
+	return stop()
 }
 
 // Insert loads *Key to the default engine.
